@@ -1,0 +1,51 @@
+2020-08-31 06:51:13,278 - root - MainThread -  INFO - Source File available. Continue c:\openpay\sample_data.xlsx
+2020-08-31 06:51:38,873 - root - MainThread -  INFO - Success Loading data Sheet tblMerchant into dataframe
+2020-08-31 06:52:08,024 - root - MainThread -  INFO - Success Loading data Sheet tblTrans into dataframe
+2020-08-31 06:52:36,087 - root - MainThread -  INFO - Success Loading data Sheet tblCust into dataframe
+2020-08-31 06:52:41,103 - root - MainThread -  INFO - Executed SQL successfully 
+select 
+strftime('%Y', PlanReceivedOnUTC) Year,
+strftime('%W', PlanReceivedOnUTC) WeekNumber,
+max(date(strftime('%Y-%m-%d',PlanReceivedOnUTC), 'weekday 0', '-7 day')) WeekStart,
+max(date(strftime('%Y-%m-%d',PlanReceivedOnUTC), 'weekday 0', '-1 day')) WeekEnd,
+RetailerName, 
+count(PurchasePrice) as Count_Sales, 
+round(sum(PurchasePrice),2) as Total_Sales 
+from df_Trans 
+inner join df_Merchant  
+where df_Trans.RetailerID = df_Merchant.RetailerID
+group by Year, WeekNumber, RetailerName
+order by Year, WeekNumber, RetailerName 
+
+2020-08-31 06:52:44,614 - root - MainThread -  INFO - Executed SQL successfully 
+select 
+strftime('%Y', RefundedOn) Year,
+strftime('%W', RefundedOn) WeekNumber,
+max(date(strftime('%Y-%m-%d',RefundedOn), 'weekday 0', '-7 day')) WeekStart,
+max(date(strftime('%Y-%m-%d',RefundedOn), 'weekday 0', '-1 day')) WeekEnd,
+RetailerName, 
+count(Deposit) as Count_Refund, 
+round(sum(Deposit),2) as Total_Sales 
+from df_Trans 
+inner join df_Merchant  
+where 
+df_Trans.RetailerID = df_Merchant.RetailerID 
+and RefundedOn is not null  
+group by Year, WeekNumber, RetailerName
+order by Year, WeekNumber, RetailerName 
+
+2020-08-31 06:52:49,114 - root - MainThread -  INFO - Executed SQL successfully 
+select 
+strftime('%Y', LastUpdated) Year,
+strftime('%W', LastUpdated) WeekNumber,
+max(date(strftime('%Y-%m-%d',LastUpdated), 'weekday 0', '-7 day')) WeekStart,
+max(date(strftime('%Y-%m-%d',LastUpdated), 'weekday 0', '-1 day')) WeekEnd,
+count(distinct CustomerID) as Active_Customer_Count 
+from df_Trans 
+group by Year, WeekNumber
+order by Year, WeekNumber 
+
+
+2020-08-31 06:52:49,114 - root - MainThread -  INFO - Writing output to CSV File WeeklySalesRetailer.csv
+2020-08-31 06:52:49,130 - root - MainThread -  INFO - Writing output to CSV File WeeklyRefundRetailer.csv
+2020-08-31 06:52:49,130 - root - MainThread -  INFO - Writing output to CSV File WeeklyActiveCustomer.csv
