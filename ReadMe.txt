@@ -1,4 +1,4 @@
-1. Uploaded ipython notebook in  git for working logic linke : https://github.com/sajinvk/OpenPay/blob/master/DataAnalysis.ipynb
+1. Uploaded ipython notebook in  git for working logic link : https://github.com/sajinvk/OpenPay/blob/master/DataAnalysis.ipynb
 2. Testing environment 
    Operating System : Windows 
    Python : 3.8 
